@@ -28,7 +28,7 @@ func main() {
 		cli.StringFlag{
 			Name:        "date,d",
 			Usage:       "Change dsignated date",
-			Value:       time.Now().Format("2006-0-02"),
+			Value:       time.Now().Format("2006-01-02"),
 			Destination: &strDate,
 		},
 		cli.StringFlag{
