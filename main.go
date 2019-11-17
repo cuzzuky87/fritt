@@ -56,6 +56,7 @@ func main() {
 	}
 }
 
+// Render : テンプレートを吐き出すやつ
 func Render(title string, tpltype string, date string, trgpath string) error {
 
 	m := map[string]string{
