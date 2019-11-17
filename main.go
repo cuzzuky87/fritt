@@ -14,6 +14,7 @@ func main() {
 	var tplType string
 	var strDate string
 	var filename string
+	var trgpath string
 
 	app := cli.NewApp()
 
@@ -36,10 +37,16 @@ func main() {
 			Value:       "input_name",
 			Destination: &filename,
 		},
+		cli.StringFlag{
+			Name:        "path,p",
+			Usage:       "target path",
+			Value:       "",
+			Destination: &trgpath,
+		},
 	}
 
 	app.Action = func(c *cli.Context) error {
-		Render(filename, tplType, strDate)
+		Render(filename, tplType, strDate, trgpath)
 		return nil
 	}
 
@@ -49,7 +56,7 @@ func main() {
 	}
 }
 
-func Render(title string, tpltype string, date string) error {
+func Render(title string, tpltype string, date string, trgpath string) error {
 
 	m := map[string]string{
 		"title": title,
@@ -62,7 +69,7 @@ func Render(title string, tpltype string, date string) error {
 		return err
 	}
 
-	f, err := os.Create(filepath.Join(filepath.Dir(p), (title + ".md")))
+	f, err := os.Create(filepath.Join(trgpath, (title + ".md")))
 	if err != nil {
 		log.Fatal(err)
 		return err
@@ -71,13 +78,13 @@ func Render(title string, tpltype string, date string) error {
 
 	switch tpltype {
 	case "giji":
-		tpl := template.Must(template.ParseFiles("templates//giji.tpl"))
+		tpl := template.Must(template.ParseFiles(filepath.Join(filepath.Dir(p), "templates", "giji.tpl")))
 		tpl.Execute(f, m)
 	case "repo":
-		tpl := template.Must(template.ParseFiles("templates//repo.tpl"))
+		tpl := template.Must(template.ParseFiles(filepath.Join(filepath.Dir(p), "templates", "repo.tpl")))
 		tpl.Execute(f, m)
 	default:
-		tpl := template.Must(template.ParseFiles("templates/empt.tpl"))
+		tpl := template.Must(template.ParseFiles(filepath.Join(filepath.Dir(p), "templates", "empt.tpl")))
 		tpl.Execute(f, m)
 	}
 	return nil
